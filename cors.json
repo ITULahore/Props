@@ -1,0 +1,14 @@
+[
+    {
+      "origin": [
+        "http://localhost:3001",
+        "https://scholarspace.online",
+        "https://fall2024-se101.ubs.dev",
+        "https://fall2024-se200b.ubs.dev"
+      ],
+      "method": ["GET"],
+      "responseHeader": ["Content-Type"],
+      "maxAgeSeconds": 3600
+    }
+  ]
+  
