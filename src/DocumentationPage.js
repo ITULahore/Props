@@ -1,8 +1,12 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Box, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/system';
 import ReactJson from 'react-json-view'; // Importing react-json-view
+import {list,Form,Graph} from './Constants';
+
+
+
 
 // Styled components
 const CodeBox = styled(Box)(({ theme }) => ({
@@ -66,11 +70,17 @@ const ContainerBox = styled(Box)(({ theme }) => ({
   boxShadow: '0 8px 30px rgba(0, 0, 0, 0.2)',
 }));
 
-const CollapsibleDocPage = ({ Data, config, appearing }) => {
+const CollapsibleDocPage = ({ component}) => {
+  const [dataSource,setDataSource]=useState(component=="Listing"?list:component=="Graph"?Graph:Form)
+  useEffect(()=>{
+
+    setDataSource(component=="Listing"?list:component=="Graph"?Graph:Form)
+  },[component])
+  
   return (
     <ContainerBox>
       <TitleTypography variant="h4" gutterBottom>
-        Component Props Documentation
+        {component} Props Documentation
       </TitleTypography>
 
       {/* Collapsible Section for Data */}
@@ -81,7 +91,7 @@ const CollapsibleDocPage = ({ Data, config, appearing }) => {
         <AccordionDetails>
           <CodeBox>
             <ReactJson
-              src={Data}
+              src={dataSource.Data}
               theme="monokai"
               collapsed={false}
               enableClipboard={false}
@@ -99,7 +109,7 @@ const CollapsibleDocPage = ({ Data, config, appearing }) => {
         <AccordionDetails>
           <CodeBox>
             <ReactJson
-              src={config}
+              src={dataSource.Config}
               theme="monokai"
               collapsed={false}
               enableClipboard={false}
@@ -117,7 +127,7 @@ const CollapsibleDocPage = ({ Data, config, appearing }) => {
         <AccordionDetails>
           <CodeBox>
             <ReactJson
-              src={appearing}
+              src={dataSource.Appearance}
               theme="monokai"
               collapsed={false}
               enableClipboard={false}
