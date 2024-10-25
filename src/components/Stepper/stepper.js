@@ -6,13 +6,9 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 
-const steps = [
-  'Select master blaster campaign settings',
-  'Create an ad group',
-  'Create an ad',
-];
 
-export default function AlternativeLabel() {
+
+export default function CustomStepper({steps,activeStep}) {
   return (
     <>
       <Card
@@ -23,19 +19,8 @@ export default function AlternativeLabel() {
           mb: "15px",
         }}
       >
-        <Typography
-          as="h3"
-          sx={{
-            fontSize: 18,
-            fontWeight: 500,
-            mb: '10px'
-          }}
-        >
-          Alternative Label
-        </Typography>
-
         <Box sx={{ width: '100%' }}>
-          <Stepper activeStep={1} alternativeLabel className="direction-ltr">
+          <Stepper activeStep={activeStep} alternativeLabel className="direction-ltr">
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>

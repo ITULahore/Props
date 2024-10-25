@@ -601,7 +601,9 @@ function FormBuilder() {
                 )
             }
             {
+                   <Grid item xs={12} md={10}>
                 <DemoView generatedProps={generatedPropsWithoutButtons} />
+            </Grid>
             }
                 
         </Grid>
