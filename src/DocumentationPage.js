@@ -1,9 +1,10 @@
 import React,{useState,useEffect} from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Box, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Box, Typography, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/system';
-import ReactJson from 'react-json-view'; // Importing react-json-view
-import {list,Form,Graph} from './Constants';
+import ReactJson from 'react-json-view'; 
+import {list,form,graph} from './Constants';
 
 
 
@@ -71,10 +72,12 @@ const ContainerBox = styled(Box)(({ theme }) => ({
 }));
 
 const CollapsibleDocPage = ({ component}) => {
-  const [dataSource,setDataSource]=useState(component=="Listing"?list:component=="Graph"?Graph:Form)
+  console.log("component",component)
+  const navigate = useNavigate(); 
+  const [dataSource,setDataSource]=useState(component=="Listing"?list:component=="Graph"?graph:form)
   useEffect(()=>{
 
-    setDataSource(component=="Listing"?list:component=="Graph"?Graph:Form)
+    setDataSource(component=="Listing"?list:component=="Graph"?graph:form)
   },[component])
   
   return (
@@ -82,8 +85,21 @@ const CollapsibleDocPage = ({ component}) => {
       <TitleTypography variant="h4" gutterBottom>
         {component} Props Documentation
       </TitleTypography>
+      {component === "Form" ? (
+ <Button
 
-      {/* Collapsible Section for Data */}
+  variant="outlined"
+
+  onClick={() => navigate("/formGeneration")}
+  sx={{ marginTop: '-100px', 
+    backgroundImage: 'linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)',
+    color: '#fff',
+
+  }}
+>
+  Generate Form
+</Button>
+) : null}
       <StyledAccordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}>
           <SectionTitle variant="h6">Data Props</SectionTitle>
@@ -91,7 +107,7 @@ const CollapsibleDocPage = ({ component}) => {
         <AccordionDetails>
           <CodeBox>
             <ReactJson
-              src={dataSource.Data}
+              src={dataSource.data}
               theme="monokai"
               collapsed={false}
               enableClipboard={false}
@@ -109,7 +125,7 @@ const CollapsibleDocPage = ({ component}) => {
         <AccordionDetails>
           <CodeBox>
             <ReactJson
-              src={dataSource.Config}
+              src={dataSource.config}
               theme="monokai"
               collapsed={false}
               enableClipboard={false}
@@ -127,7 +143,7 @@ const CollapsibleDocPage = ({ component}) => {
         <AccordionDetails>
           <CodeBox>
             <ReactJson
-              src={dataSource.Appearance}
+              src={dataSource.appearance}
               theme="monokai"
               collapsed={false}
               enableClipboard={false}

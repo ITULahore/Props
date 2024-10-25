@@ -1,338 +1,743 @@
-export const list= {
-    Data : {
-
-    Features: {
-
+export const list = {
+  data: {
+    features: {
+      rowActions:[
+        {
+          name: 'Edit',
+          serverCommunication: {
+            data: {
+              parameters: {
+                fields: [
+                  {
+                    name: "Id",
+                    required: true,
+                    validation: () => { }
+                  },
+                  {
+                    name: 'Name',
+                    required: true,
+                    validation: () => { },
+                  },
+                  {
+                    name: 'Email',
+                    required: true,
+                    validation: () => { },
+                  }
+                ]
+              },
+              sagaCommunication: {
+                apiActionType: "<Action>",
+                permission: '<permission>',
+                requestType: 'POST',
+                apiUrl: "https://api.example.com/export",
+                metaData: true,
+                body: {},
+                reduxActionType: '<Action>',
+                onSuccess: () => { console.log(' successful!') },
+                onFailure: (error) => { console.log(` failed: ${error.message}`) }
+              }
+            },
+            config: {
+              features: {
+                tokenAuthentication: true,
+                permission: true,
+              }
+            },
+            response: {
+            },
+          },
+          permission: '<permission>',
+          onAction: (params) => { console.log("") },
+          options: {
+            icon: '<icon>',
+            backgroundColor: '#007bff',
+            color: '#fff',
+          },
+        },
+        {
+          name: 'Delete',
+          permission: '<permission>',
+          serverCommunication: {
+            data: {
+              parameters: {
+                fields: [
+                  {
+                    name: "Id",
+                    required: true,
+                    validation: () => { }
+                  },
+                  {
+                    name: 'Name',
+                    required: true,
+                    validation: () => { },
+                  },
+                  {
+                    name: 'Email',
+                    required: true,
+                    validation: () => { },
+                  }
+                ]
+              },
+              sagaCommunication: {
+                apiActionType: "<Action>",
+                permission: '<permission>',
+                requestType: 'POST',
+                apiUrl: "https://api.example.com/export",
+                metaData: true,
+                body: {},
+                reduxActionType: '<Action>',
+                onSuccess: () => { console.log(' successful!') },
+                onFailure: (error) => { console.log(` failed: ${error.message}`) }
+              }
+            },
+            config: {
+              features: {
+                tokenAuthentication: true,
+                permission: true,
+              }
+            },
+            response: {
+            },
+          },
+          onAction: (params) => { console.log("") },
+          options: {
+            icon: '<icon>',
+            backgroundColor: '#ff0000',
+            color: '#fff',
+          },
+        },
+      ],
       export: {
-        apiUrl: 'https://api.example.com/export',
-        onExport: (exportType) => {  },
-        exportOptions: {
+        serverCommunication: {
+          data: {
+            parameters: {
+              fields: [
+                {
+                  name: "Id",
+                  required: true,
+                  validation: () => { }
+                },
+                {
+                  name: 'Name',
+                  required: true,
+                  validation: () => { },
+                },
+                {
+                  name: 'Email',
+                  required: true,
+                  validation: () => { },
+                }
+              ]
+            },
+            sagaCommunication: {
+              apiActionType: "EXPORT_DATA",
+              permission: '<permission>',
+              requestType: 'POST',
+              apiUrl: "https://api.example.com/export",
+              metaData: true,
+              body: {},
+              reduxActionType: 'EXPORT_DATA',
+              onSuccess: () => { console.log(' successful!') },
+              onFailure: (error) => { console.log(` failed: ${error.message}`) }
+            }
+          },
+          config: {
+            features: {
+              tokenAuthentication: true,
+              permission: true,
+            }
+          },
+          response: {
+
+          },
+        },
+    
+        parameters: {
+          fields: [
+            {
+              name: "Id",
+              required: true,
+              visibility: false,
+              validation: () => { }
+            },
+            {
+              name: 'Name',
+              required: true,
+              visibility: true,
+              validation: () => { },
+            },
+            {
+              name: 'Email',
+              required: true,
+              visibility: true,
+              validation: () => { },
+            }
+          ]
+        },
+        permission: '<permission>',
+        onAction: (params) => { console.log("") },
+        options: {
           formats: ['CSV', 'PDF'],
           includeHeaders: true,
+          icon: "",
         },
         onSuccess: () => { alert('Export successful!') },
         onFailure: (error) => { alert(`Export failed: ${error.message}`) }
       },
       filter: {
-        apiUrl: 'https://api.example.com/export',
-        onFilter: (filterParams) => {  },
-        filterOptions: {
+        parameters: {
+        },
+        serverCommunication: {
+          data: {
+            parameters: {
+              fields: [
+                {
+                  name: "Id",
+                  required: true,
+                  validation: () => { }
+                },
+                {
+                  name: 'Name',
+                  required: true,
+                  validation: () => { },
+                },
+                {
+                  name: 'Email',
+                  required: true,
+                  validation: () => { },
+                }
+              ]
+            },
+            sagaCommunication: {
+              apiActionType: "EXPORT_DATA",
+              permission: '<permission>',
+              requestType: 'POST',
+              apiUrl: "https://api.example.com/export",
+              metaData: true,
+              body: {},
+              reduxActionType: 'EXPORT_DATA',
+              onSuccess: () => { console.log(' successful!') },
+              onFailure: (error) => { console.log(` failed: ${error.message}`) }
+            }
+          },
+          config: {
+            features: {
+              tokenAuthentication: true,
+              permission: true,
+            }
+          },
+          response: {
+          },
+        },
+        permission: '<permission>',
+        onAction: (params) => { console.log("") },
+        options: {
           filterBy: ['status', 'category'],
           statusOptions: ['active', 'inactive'],
         }
       },
       sort: {
-        apiUrl: 'https://api.example.com/export',
-        defaultSortField: 'name',
-        defaultSortOrder: 'asc',
-        onSort: (sortBy) => { },
-        multiColumnSort: true,
-      },
-      search: {
-        apiUrl: 'https://api.example.com/export',
-        searchFields: ['name', 'email'],
-        onSearch: (query) => { },
-        onAdvancedSearch: (criteria) => {  },
-      },
-      list: {
-        coloumnsHeaders: ['Name', 'Email', 'Status', 'Actions'],
-
-        apiUrl: 'https://api.example.com/export',
-        onRowClick: (rowData) => { },
-        onRowDoubleClick: (rowData) => { },
-        onRowSelect: (selectedRows) => { },
-        onRowDeselect: (deselectedRows) => { },
-        onRowExpand: (expandedRow) => { },
-        onRowCollapse: (collapsedRow) => { },
-
-      },
-      
-      pagination: {
-        apiUrl: 'https://api.example.com/export',
-        pageSize: 10,
-        onPageSizeChange: (pageSize) => { },
-        onPageChange: (page) => { },
-      },
-      grid  : {
-        coloumnsHeaders: ['Name', 'Email', 'Status', 'Actions'],
-        apiUrl: 'https://api.example.com/export',
-        onRowClick: (rowData) => { },
-        onRowDoubleClick: (rowData) => { },
-        onRowSelect: (selectedRows) => { },
-        onRowDeselect: (deselectedRows) => { },
-        onRowExpand: (expandedRow) => { },
-        onRowCollapse: (collapsedRow) => { },
-      },
-    },
-  },
-  Config : {
-    
-    viewMode: {
-      list:true,
-      grid:true
-    },
-    features: {
-      multiStep: true,
-      export:true,
-      filter:true,
-      sort:true,
-      search:true,
-      pagination:true,
-      bulkActions:true,
-      fetchData:true
-    }
-  },
-   Appearance : {
-export:{
-  buttonStyle: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-  },
-  modalStyle: {
-    backgroundColor: '#fff',
-    color: '#333',
-    borderRadius: '10px',
-    padding: '20px',
-    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-  },
-  modalButtonStyle: {
-    cancelButton: {
-      backgroundColor: '#ccc',
-      color: '#333',
-    },
-    confirmButton: {
-      backgroundColor: '#ff0000',
-      color: '#fff',
-    },
-  }
-},
-filter:{
-  buttonStyle: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-  },
-  modalStyle: {
-    backgroundColor: '#fff',
-    color: '#333',
-    borderRadius: '10px',
-    padding: '20px',
-    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-  },
-  modalButtonStyle: {
-    cancelButton: {
-      backgroundColor: '#ccc',
-      color: '#333',
-    },
-    confirmButton: {
-      backgroundColor: '#ff0000',
-      color: '#fff',
-    },
-  }
-},
-sort:{
-
-  buttonStyle: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-  },
-  modalStyle: {
-    backgroundColor: '#fff',
-    color: '#333',
-    borderRadius: '10px',
-    padding: '20px',
-    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-  },
-  modalButtonStyle: {
-    cancelButton: {
-      backgroundColor: '#ccc',
-      color: '#333',
-    },
-    confirmButton: {
-      backgroundColor: '#ff0000',
-      color: '#fff',
-    },
-  }
-},
-  }
-}
-export const Graph=
-{ 
-     Data : {
-    features: {
-      fetchData: {
-        apiUrl: 'https://api.example.com/graph-data',
-        onFetch: (params) => { },
-        fetchOptions: {
-          graphTypes: ['Bar', 'Line', 'Pie'],
-          includeLegend: true,
-        },
-        onSuccess: () => { alert('Graph data fetched successfully!') },
-        onFailure: (error) => { alert(`Graph data fetch failed: ${error.message}`) },
-      },
-      update: {
-        apiUrl: 'https://api.example.com/graph-update',
-        onUpdate: (updateParams) => { },
-        updateOptions: {
-          autoRefresh: true,
-          refreshInterval: 60000, // 60 seconds
-        },
-      },
-      customize: {
-        onCustomize: (customizeOptions) => { },
-        customizeOptions: {
-          colors: ['#007bff', '#28a745', '#dc3545'],
-          displayGridLines: true,
-        },
-      },
-    },
-  },
-  
-   Config : {
-    viewMode: {
-      BarGraph: true,
-      LineGraph:true,
-      PieGraph:true
-    },
-    features: {
-      fetchData: true,
-      update: true,
-      customize: true,
-      export: true,
-    }
-  },
-  
-   Appearance : {
-    fetchData: {
-      buttonStyle: {
-        backgroundColor: '#28a745',
-        color: '#fff',
-      },
-      graphStyle: {
-        backgroundColor: '#fff',
-        color: '#333',
-        borderRadius: '10px',
-        padding: '20px',
-        boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-      },
-    },
-    update: {
-      buttonStyle: {
-        backgroundColor: '#17a2b8',
-        color: '#fff',
-      },
-      graphStyle: {
-        backgroundColor: '#f9f9f9',
-        color: '#000',
-      },
-    },
-    customize: {
-      buttonStyle: {
-        backgroundColor: '#ff851b',
-        color: '#fff',
-      },
-      modalStyle: {
-        backgroundColor: '#fff',
-        color: '#333',
-        borderRadius: '10px',
-        padding: '20px',
-        boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-      },
-    },
-  }
-}
-
-export const Form={
-     Data : {
-        features: {
-          multiStep:{
-            currentStep:1,
-            totalSteps:5
-          },
-          validation: [
-            {
-
-            onValidate: (formData) => { },
-            validationOptions: {
-              fields: ['name', 'email', 'password'],
-              requiredFields: ['name', 'email'],
-              fieldValidations: {
-                email:()=>{},
-                password:()=>{},
-              },
+        serverCommunication: {
+          data: {
+            parameters: {
+              fields: [
+                {
+                  name: "Id",
+                  required: true,
+                  validation: () => { }
+                },
+                {
+                  name: 'Name',
+                  required: true,
+                  validation: () => { },
+                },
+                {
+                  name: 'Email',
+                  required: true,
+                  validation: () => { },
+                }
+              ]
             },
+            sagaCommunication: {
+              apiActionType: "EXPORT_DATA",
+              permission: '<permission>',
+              requestType: 'POST',
+              apiUrl: "https://api.example.com/export",
+              metaData: true,
+              body: {},
+              reduxActionType: 'EXPORT_DATA',
+              onSuccess: () => { console.log(' successful!') },
+              onFailure: (error) => { console.log(` failed: ${error.message}`) }
+            }
           },
-          {
-
-            onValidate: (formData) => { },
-            validationOptions: {
-              fields: ['phone Number', 'Address', 'Blood Type'],
-              requiredFields: ['Phone Number', 'Address'],
-              fieldValidations: {
-                PhoneNumber:()=>{},
-                Address:()=>{},
-              },
-            },
-          }
-        ],
-          submission: {
-            apiUrl: 'https://api.example.com/form-submit',
-            onSubmit: (formData) => { },
-            onSccess: () => { alert('Form submitted successfully!') },
-            onFailure: (error) => { alert(`Form submission failed: ${error.message}`) },
+          config: {
+            features: {
+              tokenAuthentication: true,
+              permission: true,
+            }
           },
-          reset: {
-            onReset: () => { },
+          response: {
           },
         },
-      },
-      
-       Config : {
-        viewMode: {
-        ModalView:true,
+        parameters: {
+          fields: [
+          ]
         },
-        features: {
-          validation: true,
-          submission: true,
-          reset: true,
-          multiStep:true
+        permission: '<permission>',
+        onAction: (params) => { console.log("") },
+        options: {
+          defaultSortField: 'name',
+          defaultSortOrder: 'asc',
+          multiColumnSort: true,
         }
       },
-      
-       Appearance : {
-        validation: {
-          fieldStyle: {
-            backgroundColor: '#f1f1f1',
-            color: '#333',
-            borderRadius: '5px',
-            padding: '10px',
+      list: {
+        serverCommunication: {
+          data: {
+            parameters: {
+              fields: [
+                {
+                  name: "Id",
+                  required: true,
+                  validation: () => { }
+                },
+                {
+                  name: 'Name',
+                  required: true,
+                  validation: () => { },
+                },
+                {
+                  name: 'Email',
+                  required: true,
+                  validation: () => { },
+                }
+              ]
+            },
+            sagaCommunication: {
+              apiActionType: "EXPORT_DATA",
+              permission: '<permission>',
+              requestType: 'POST',
+              apiUrl: "https://api.example.com/export",
+              metaData: true,
+              body: {},
+              reduxActionType: 'EXPORT_DATA',
+              onSuccess: () => { console.log(' successful!') },
+              onFailure: (error) => { console.log(` failed: ${error.message}`) }
+            }
           },
-          errorStyle: {
-            color: '#ff0000',
+          config: {
+            features: {
+              tokenAuthentication: true,
+              permission: true,
+            }
+          },
+          response: {
           },
         },
-        submission: {
-          buttonStyle: {
-            submitButton: {
-              backgroundColor: '#007bff',
-              color: '#fff',
+        parameters: {
+          fields: []
+        },
+        permission: '<permission>',
+        onAction: (params) => { console.log("") },
+        options: { columns: ['Name', 'Email', 'Status', 'Actions'] },
+      },
+      pagination:
+      {
+        parameters: {
+          fields: []
+        },
+        permission: '<data>',
+        serverCommunication: {
+          data: {
+            parameters: {
+              fields: [
+                {
+                  name: "Id",
+                  required: true,
+                  validation: () => { }
+                },
+                {
+                  name: 'Name',
+                  required: true,
+                  validation: () => { },
+                },
+                {
+                  name: 'Email',
+                  required: true,
+                  validation: () => { },
+                }
+              ]
+            },
+            sagaCommunication: {
+              apiActionType: "<Action>",
+              permission: '<permission>',
+              requestType: 'POST',
+              apiUrl: "https://api.example.com/export",
+              metaData: true,
+              body: {},
+              reduxActionType: '<Action>',
+              onSuccess: () => { console.log(' successful!') },
+              onFailure: (error) => { console.log(` failed: ${error.message}`) }
+            }
+          },
+          config: {
+            features: {
+              tokenAuthentication: true,
+              permission: true,
+            }
+          },
+          response: {
+          },
+        },
+        options: {
+          pageSize: 10,
+          pageSizeOptions: [5, 10, 20],
+        },
+        onAction: (params) => { console.log("") },
+      },
+      bulkAction: {
+        parameters: {
+          fields: [
+            {
+              name: "Id",
+              required: true,
+              visibility: false,
+              validation: () => { }
+            },
+            {
+              name: 'Name',
+              required: true,
+              visibility: true,
+              validation: () => { },
+            },
+            {
+              name: 'Email',
+              required: true,
+              visibility: true,
+              validation: () => { },
+            }
+          ]
+        },
+        permission: '<permission>',
+        serverCommunication: {
+          data: {
+            parameters: {
+              fields: [
+                {
+                  name: "Id",
+                  required: true,
+                  validation: () => { }
+                },
+                {
+                  name: 'Name',
+                  required: true,
+                  validation: () => { },
+                },
+                {
+                  name: 'Email',
+                  required: true,
+                  validation: () => { },
+                }
+              ]
+            },
+            sagaCommunication: {
+              apiActionType: "<Action>",
+              permission: '<permission>',
+              requestType: 'POST',
+              apiUrl: "https://api.example.com/export",
+              metaData: true,
+              body: {},
+              reduxActionType: '<Action>',
+              onSuccess: () => { console.log(' successful!') },
+              onFailure: (error) => { console.log(` failed: ${error.message}`) }
+            }
+          },
+          config: {
+            features: {
+              tokenAuthentication: true,
+              permission: true,
+            }
+          },
+          response: {
+          },
+        },
+        options: {
+          actions: ['Delete', 'Archive'],
+        },
+        onAction: (params) => { console.log("") },
+
+      },
+    },
+  },
+  config: {
+    viewMode: {
+      presentation: [
+        "List", "Grid", "Card", "Table"
+      ]
+    },
+    features: { export: true, filter: true, sort: true, search: true, pagination: true, bulkAction: true },
+  },
+  appearance: {
+    export:
+    {
+    button:[
+      {
+        type: "confirm",
+        backgroundColor: '#007bff',
+        color: '#fff',
+      },
+      {
+        type: "cancel",
+        backgroundColor: '#ccc',
+        color: '#333',
+      },
+    ]
+    },
+    filter:[
+      {
+        type: "text",
+        backgroundColor: '#007bff',
+        color: '#fff',
+      },
+      {
+        type: "dropdown",
+        backgroundColor: '#007bff',
+        color: '#fff',
+      },
+      {
+        type: "date",
+        backgroundColor: '#007bff',
+        color: '#fff',
+      },
+    ]
+
+  }
+
+};
+
+export const graph = {
+  data: {
+    features: {
+      graph: {
+        serverCommunication: {
+          data: {
+            parameters: {
+              fields: [
+                {
+                  name: "Id",
+                  required: true,
+                  validation: () => { }
+                },
+                {
+                  name: 'Name',
+                  required: true,
+                  validation: () => { },
+                },
+                {
+                  name: 'Email',
+                  required: true,
+                  validation: () => { },
+                }
+              ]
+            },
+            sagaCommunication: {
+              apiActionType: "<Action>",
+              permission: '<permission>',
+              requestType: 'GET',
+              apiUrl: "https://api.example.com/graph",
+              metaData: true,
+              reduxActionType: '<Action>',
+              onSuccess: () => { console.log(' successful!') },
+              onFailure: (error) => { console.log(` failed: ${error.message}`) }
+            }
+          },
+          config: {
+            features: {
+              tokenAuthentication: true,
+              permission: true,
+            }
+          },
+          response: {
+          },
+        },
+        parameters: {
+          fields: []
+        },
+        permission: '<permission>',
+        onAction: (params) => { console.log('Fetching graph data...') },
+        options: {
+          includeLegend: true,
+        },
+      },
+
+    },
+  },
+  config: {
+    viewMode: {
+      presentation: ['Bar', 'Line', 'Pie'],
+    },
+    features: { graph: true },
+  },
+  appearance: {
+    features: {
+      graph: 
+       [
+        {
+          type: "Bar",
+          backgroundColor: '#007bff',
+          color: '#fff',
+        },
+        {
+          type: "Line",
+          backgroundColor: '#007bff',
+          color: '#fff',
+        },
+        {
+          type: "Pie",
+          backgroundColor: '#007bff',
+          color: '#fff',
+        },
+       ]
+      
+    },
+  },
+};
+
+
+export const form = {
+  data: {
+    features: {
+
+      submission: [
+        {
+          serverCommunication: {
+            data: {
+              parameters: {
+              },
+              sagaCommunication: {
+                apiActionType: "<Action>",
+                permission: 'permission',
+                requestType: 'POST',
+                apiUrl: "https://api.example.com/export",
+                metaData: true,
+                body: {},
+                reduxActionType:  "<Action>",
+                onSuccess: () => { console.log(' successful!') },
+                onFailure: (error) => { console.log(` failed: ${error.message}`) }
+              }
+            },
+            config: {
+              features: {
+                tokenAuthentication: true,
+                permission: true,
+              }
+            },
+            response: {
             },
           },
-          formStyle: {
-            backgroundColor: '#fff',
-            color: '#333',
-            borderRadius: '10px',
-            padding: '20px',
-            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+          parameters: {
+            fields: [
+            ]
+          },
+          permission: '<permission>',
+          onAction: (formData) => { console.log('Submitting form...') },
+          options: {
           },
         },
-        reset: {
-          buttonStyle: {
-            resetButton: {
-              backgroundColor: '#ccc',
-              color: '#333',
+        {
+          serverCommunication: {
+            data: {
+              parameters: {
+                fields: [
+                  {
+                    name: "Phone Number",
+                    required: true,
+                    validation: () => { }
+                  },
+                  {
+                    name: 'Blood Type',
+                    required: true,
+                    validation: () => { },
+                  },
+                  {
+                    name: 'Contact Number',
+                    required: true,
+                    validation: () => { },
+                  }
+                ]
+              },
+              sagaCommunication: {
+                apiActionType: "<Action>",
+                permission: '<permission>',
+                requestType: 'POST',
+                apiUrl: "https://api.example.com/export",
+                metaData: true,
+                body: {},
+                reduxActionType: '<Action>',
+                onSuccess: () => { console.log(' successful!') },
+                onFailure: (error) => { console.log(` failed: ${error.message}`) }
+              }
+            },
+            config: {
+              features: {
+                tokenAuthentication: true,
+                permission: true,
+              }
+            },
+            response: {
             },
           },
+          parameters: {
+            fields: [
+              {
+                name: 'Phone Number',
+                required: true,
+                visibility: true,
+                validation: () => { },
+              },
+              {
+                name: 'Blood Type',
+                required: true,
+                visibility: true,
+                validation: () => { },
+              },
+            ]
+          },
+          permission: '<permission>',
+          onAction: (formData) => { console.log('Submitting form...') },
+          options: {
+            submitMethod: 'POST',
+          },
+        }
+
+      ],
+
+    },
+  },
+  config: {
+    viewMode: {
+      presentation: ['Form', "modalView"],
+      mode: ["create", "edit", "view"]
+    },
+    features: { submission: true },
+  },
+  appearance: {
+    features: {
+
+      submission: {
+        button: [{
+          type: "confirm",
+          backgroundColor: '#007bff',
+          color: '#fff',
         },
-      }
-      
-}
+        {
+          type: "cancel",
+          backgroundColor: '#ccc',
+          color: '#333',
+        },
+        ],
+      },
+
+    },
+  },
+};

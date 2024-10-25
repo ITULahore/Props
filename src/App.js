@@ -1,39 +1,35 @@
-import React,{useState} from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import CollapsibleDocPage from './DocumentationPage';
-import { Button, Container, Grid, Typography } from '@mui/material';
-import ComponentSelection from './componentSelection';
+import React from 'react';
+import { Grid, Box, Button } from '@mui/material';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import FrontEndDocumentation from './views/frontEndDocumentation';
+import BackendDocumentation from './views/Backend/backendDocumentation';
+import HomePage from './views/homePage';  // Import your HomePage component
+import GeneratedObjectPage from './views/Backend/generatedObject';
+
 
 const App = () => {
-const [selectedComponent, setSelectedComponent] = useState(null);
+   
 
-  const buttonsData = [
-    {
-      label: 'Listing Component',
-      name:'Listing',
-      background: 'linear-gradient(90deg, #8E2DE2 0%, #4A00E0 100%)',
-      onClick: () => setSelectedComponent("Listing"),
-    },
-    {
-      label: 'Graph Component',
-      name:'Graph',
-      background: 'linear-gradient(90deg, #43C6AC 0%, #191654 100%)',
-      onClick: () => setSelectedComponent("Graph"),
-    },
-    {
-      label: 'Form Component',
-      name:"Form",
-      background: 'linear-gradient(90deg, #ff9966 0%, #ff5e62 100%)',
-      onClick: () => setSelectedComponent("Form"),
-    },
-  ];
+    < Grid item xs={12} sm={6} md={4} sx={{ marginTop: "30px" }} >
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+            <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => {}}  // Navigate to the previous page
+            >
+                Go Back
+            </Button>
+        </Box>
+        {/* <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/frontend" element={<FrontEndDocumentation />} />
+            <Route path="/formGeneration" element={<FormBuilder />} />
+            <Route path="/backend" element={<BackendDocumentation />} />
+            <Route path="/generated-object" element={<GeneratedObjectPage />} />
+        </Routes> */}
+    </Grid>
 
-return (
- < Grid item xs={12} sm={6} md={4}>
-<ComponentSelection buttonsData={buttonsData} />
- {selectedComponent && <CollapsibleDocPage component={selectedComponent}/>}
-</Grid>
-);
 };
 
 export default App;
