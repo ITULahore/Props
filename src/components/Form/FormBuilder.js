@@ -107,6 +107,7 @@ function FormBuilder() {
                                         {
                                             type: "text",
                                             name: "fieldName",
+                                            value:"hello",
                                             label: "Enter the name of the field",
                                             required: true,
                                         },
