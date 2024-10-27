@@ -5,7 +5,7 @@ import App from './App';
 
 import { ThemeProvider } from '@mui/material/styles';
 import { Grid, Box, Button } from '@mui/material';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import FrontEndDocumentation from './views/frontEndDocumentation';
 import BackendDocumentation from './views/Backend/backendDocumentation';

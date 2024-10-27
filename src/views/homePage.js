@@ -7,18 +7,18 @@ const HomePage = () => {
     const sections = [
         {
             title: 'Frontend Frameworks',
-            description: 'Explore documentation for various frontend technologies like React, Angular, Vue, etc.',
+            description: 'Explore documentation for various React framwork.',
             route: '/frontend',
             buttonLabel: 'View Frontend Docs',
             background: 'linear-gradient(90deg, #43C6AC 0%, #191654 100%)',
         },
-        {
-            title: 'Backend Frameworks',
-            description: 'Learn about backend frameworks like Node.js, Django, Flask, etc.',
-            route: '/backend',
-            buttonLabel: 'View Backend Docs',
-            background: 'linear-gradient(90deg, #ff9966 0%, #ff5e62 100%)',
-        },
+        // {
+        //     title: 'Backend Frameworks',
+        //     description: 'Learn about backend frameworks like Node.js, Django, Flask, etc.',
+        //     route: '/backend',
+        //     buttonLabel: 'View Backend Docs',
+        //     background: 'linear-gradient(90deg, #ff9966 0%, #ff5e62 100%)',
+        // },
     ];
 
     return (
