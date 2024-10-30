@@ -1,21 +1,60 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import ADDform from './Form';
-import { Grid, Button, InputAdornment, Box,Typography } from "@mui/material";
+import Form from './Form';
+import { Grid, Button, InputAdornment, Container, Box, Typography } from "@mui/material";
 import JsonFormater from '../JsonFormatter/JsonFormatter';
+import BasicTabs from "../Tabs/BasicTabs"
 
 
 function FormBuilder() {
 
-    const [showNewFieldModal, setShowNewFieldModal] = useState(false)
     const [currentStep, setCurrentStep] = useState(0);
-    const [title, setTitle] = useState("");
-    const [showNewStepModal, setShowNewStepModal] = useState(false);
+    const [isNewStepModalOpen, setNewStepModalOpen] = useState(false);
+    const [isNewFieldModalOpen, setNewFieldModalOpen] = useState(false)
+    const [isNewSectionModalOpen, setNewSectionModalOpen] = useState(false)
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false)
+    const [isMultiStep, setIsMultiStep] = useState(false)
+    const [sectionIndex, setSectionIndex] = useState(0)
 
 
-    const handleAddStep=()=>{
-        setShowNewStepModal(true);
+    const handleAddSagaCommunication = (formData) => {
+        // Create the new serverCommunication object
+        const newServerCommunication = {
+            sagaCommunication: formData, // Add the formData here
+        };
+    
+        // Update the generated props state
+        setGeneratedProps((prevProps) => {
+            const lastSubmissionIndex = prevProps.data.features.submission.length - 1; // Get the index of the last submission
+    
+            return {
+                ...prevProps,
+                data: {
+                    ...prevProps.data,
+                    features: {
+                        ...prevProps.data.features,
+                        submission: prevProps.data.features.submission.map((submission, index) => {
+                            if (index === lastSubmissionIndex) {
+                                // Modify only the last submission item
+                                return {
+                                    ...submission,
+                                    serverCommunication: newServerCommunication, // Add new serverCommunication object
+                                };
+                            }
+                            return submission; // Return other submissions unchanged
+                        }),
+                    },
+                },
+            };
+        });
+    };
+    
+    
+    const handleAddStep = () => {
+        setNewStepModalOpen(true);
     }
+
     const handleAddNewStepInForm = (formData) => {
         setGeneratedProps((prevState) => {
             const updatedSubmission = [...prevState.data.features.submission];
@@ -34,16 +73,13 @@ function FormBuilder() {
                         },
                     ],
                     buttons: [
-                        {
-                            type: "add",
-                            label: "Add Field",
-                            onClick: (index) => { handleAddField(index) },
-                        },
                     ],
-                    onAction: () => { }
+                    onAction: () => { console.log("Hello") }
                 }
             ];
-       
+
+            console.log("Step added:", formData);
+
             return {
                 ...prevState,
                 data: {
@@ -56,142 +92,7 @@ function FormBuilder() {
             };
         });
     }
-    const handleFirstStepTitle = (formData) => {
-        const updatedForm = {
-            ...form,
-            data: {
-                ...form.data,
-                features: {
-                    ...form.data.features,
-                    submission: form.data.features.submission.map((step, index) => {
-                        return {
-                            ...step,
-                            sections: step.sections.map((section, secIndex) => {
-                                if (secIndex === 2) {
-                                        return {
-                                            ...section,
-                                            parameters: {
-                                                ...section.parameters,
-                                                fields: section.parameters.fields.map(field => 
-                                                    field.name === "title"
-                                                        ? { ...field, label: formData?"Enter the title of the first step":"Enter the title of the form" }
-                                                        : field
-                                                )
-                                            }
-                                    };
-                                    
-                                }
-                                return section; // Return section unmodified if not targeting the right one
-                            })
-                        };
-                    })
-                }
-            }
-        };
-    
-        setForm(updatedForm);
-    };
-    
-    
-    const newFieldProps = {
-        data: {
-            features: {
-                submission: [
-                    {
-                        title: "Add New Field",
-                        sections: [
-                            {
-                                title: "New Field",
-                                parameters: {
-                                    fields: [
-                                        {
-                                            type: "text",
-                                            name: "fieldName",
-                                            value:"hello",
-                                            label: "Enter the name of the field",
-                                            required: true,
-                                        },
-                                        {
-                                            type: "text",
-                                            name: "fieldLabel",
-                                            label: "Enter the label of the field",
-                                            required: true,
-                                        },
-                                        {
-                                            type: "select",
-                                            name: "fieldType",
-                                            options: [
-                                                { value: "checkbox", label: "Checkbox" },
-                                                { value: "text", label: "Text" },
-                                                { value: "number", label: "Number" },
-                                                { value: "email", label: "Email" },
-                                                { value: "select", label: "Select" },
-                                                { value: "multiSelect", label: "Multi Select" },
-                                                { value: "multiText", label: "Multi Text" },
-                                                { value: "time", label: "Time" },
-                                                { value: "file", label: "File" },
-                                            ],
-                                            label: "Enter the type of the field",
-                                            required: true,
-                                        },
-                                        {
-                                            type: "checkbox",
-                                            name: "fieldRequired",
-                                            label: "Is the field required?",
-                                            required: true,
-                                        },
-                                    ]
-                                }
-                            }
-                        ],
-                        buttons: [
-                            {
-                                type: "submit",
-                                label: "Submit",
-                            },
-                            {
-                                type: "close",
-                                label: "Close",
-                                onClick: () => { setShowNewFieldModal(false) }
-                            }
-                        ],
-                        onAction: (formData, index) => {
-                        
-                            setShowNewFieldModal(false);
-                            handleAddNewFieldInForm(formData);
 
-                        },
-                    }
-                ]
-            }
-        },
-        config: {
-            viewMode: {
-                presentation: ['modalView'],
-                mode: ["create"]
-            },
-            features: { submission: true },
-        },
-        appearance: {
-            features: {
-                submission: {
-                    buttons: [
-                        {
-                            type: "close",
-                            backgroundColor: "red",
-                            color: '#fff',
-                        },
-                        {
-                            type: "submit",
-                            backgroundColor: "green",
-                            color: '#fff',
-                        },
-                    ],
-                },
-            },
-
-        },
-    }
     const newStepProps = {
         data: {
             features: {
@@ -204,7 +105,7 @@ function FormBuilder() {
                                 parameters: {
                                     fields: [
                                         {
-                                            type: "text",
+                                            type: "textField",
                                             name: "stepName",
                                             label: "Enter the name of the step",
                                             required: true,
@@ -221,14 +122,12 @@ function FormBuilder() {
                             {
                                 type: "close",
                                 label: "Close",
-                                onClick: () => { setShowNewStepModal(false) }
+                                onClick: () => { setNewStepModalOpen(false) }
                             }
                         ],
                         onAction: (formData) => {
-                          
-                            setShowNewStepModal(false);
+                            console.log("Hello", formData);
                             handleAddNewStepInForm(formData);
-
                         },
                     }
                 ]
@@ -236,8 +135,8 @@ function FormBuilder() {
         },
         config: {
             viewMode: {
-                presentation: ['modalView'],
-                mode: ["create"]
+                presentation: 'modalView',
+                mode: "create"
             },
             features: { submission: true },
         },
@@ -260,36 +159,48 @@ function FormBuilder() {
             },
         }
     }
+
     const handleAddNewFieldInForm = (formData) => {
-
-      
-
-    
         setGeneratedProps((prevState) => {
             const updatedSubmission = [...prevState.data.features.submission];
-            const currentFields = updatedSubmission[currentStep]?.sections[0]?.parameters?.fields;
+            const currentFields = updatedSubmission[currentStep]?.sections[sectionIndex]?.parameters?.fields || [];
             const fieldExists = currentFields?.some(field => field.name === formData.fieldName);
             if (fieldExists) {
-                return prevState; 
+                console.warn("Field with this name already exists:", formData.fieldName);
+                return prevState;
             }
-            const updatedFields = [
-                ...currentFields,
-                {
-                    type: formData.fieldType,
-                    name: formData.fieldName,
-                    label: formData.fieldLabel,
-                    required: formData.fieldRequired,
-                    childFields: formData.fieldType === "multiText" ? [] : [{}],
-                    options: (formData.fieldType === "select" || formData.fieldType === "multiSelect") 
-                    ? [{ value: "Option 1", label: "Label 1" }] 
-                    : [{}]
-                }
-            ];
-    
-            updatedSubmission[currentStep].sections[0].parameters.fields = updatedFields;
-    
-     
-    
+            const newField = {
+                type: formData.fieldType,
+                name: formData.fieldName,
+                label: formData.fieldLabel,
+                required: formData.fieldRequired,
+                disabled: formData.fieldDisabled,
+                options: formData.fieldType === "select" || formData.fieldType === "radio"
+                    ? [{ value: "Option 1", label: "Label 1" }]
+                    : [],
+                multiple: formData.fieldType === "file" ? formData.fileMultiple : false,
+                minLength: formData.fieldType === "textField" ? formData.textMin : '',
+                maxLength: formData.fieldType === "textField" ? formData.textMax : '',
+                min: formData.fieldType === "number" ? formData.numberMin : '',
+                max: formData.fieldType === "number" ? formData.numberMax : '',
+                minWords: formData.fieldType === "textArea" ? formData.textAreaMin : '',
+                maxWords: formData.fieldType === "textArea" ? formData.textAreaMax : '',
+                min: formData.fieldType === "date" ? formData.dateMin : '',
+                max: formData.fieldType === "date" ? formData.dateMax : '',
+                min: formData.fieldType === "dateTime" ? formData.dateTimeMin : '',
+                max: formData.fieldType === "dateTime" ? formData.dateTimeMax : '',
+                dependant: formData.fieldDependant ? formData.fieldDependant : '',
+                dependValue: formData.fieldDependValue ? formData.fieldDependValue : '',
+                onValidation: formData.fieldValidation
+
+            };
+
+            // Add the new field to the current fields array
+            const updatedFields = [...currentFields, newField];
+            updatedSubmission[currentStep].sections[sectionIndex].parameters.fields = updatedFields;
+
+            console.log("prevState:", prevState);
+
             return {
                 ...prevState,
                 data: {
@@ -303,13 +214,334 @@ function FormBuilder() {
         });
     };
 
+    const newFieldProps = {
+        data: {
+            features: {
+                submission: [
+                    {
+                        title: "Add New Field",
+                        sections: [
+                            {
+                                title: "New Field Parameters",
+                                parameters: {
+                                    fields: [
+                                        {
+                                            type: "textField",
+                                            name: "fieldName",
+                                            label: "Enter the name of the field",
+                                            required: true,
+                                        },
+                                        {
+                                            type: "textField",
+                                            name: "fieldLabel",
+                                            label: "Enter the label of the field",
+                                            required: true,
+                                        },
+                                        {
+                                            type: "select",
+                                            name: "fieldType",
+                                            options: [
+                                                { value: "textField", label: "Text Field" },
+                                                { value: "select", label: "Select" },
+                                                { value: "multiSelect", label: "Multi Select" },
+                                                { value: "number", label: "Number" },
+                                                { value: "textArea", label: "Text Area" },
+                                                { value: "file", label: "File" },
+                                                { value: "checkbox", label: "Checkbox" },
+                                                { value: "date", label: "Date" },
+                                                { value: "time", label: "Time" },
+                                                { value: "dateTime", label: "Date and Time" },
+                                                { value: "color", label: "Color" },
+                                                { value: "url", label: "URL" },
+                                                { value: "range", label: "Range" },
+                                                { value: "radio", label: "Radio (single Select Checkbox)" },
+                                                { value: "password", label: "Password" },
+                                            ],
+                                            label: "Enter the type of the field",
+                                            required: true,
+                                        },
+                                        {
+                                            type: "multiSelect",
+                                            name: "fieldValidation",
+                                            options: [
+                                                { value: "isValidText", label: "Text Validation" },
+                                                { value: "isValidName", label: "Name Validation" },
+                                                { value: "isEmail", label: "Email Validation" },
+                                                { value: "isPhoneNumber", label: "Phone Number Validation" },
+                                                { value: "isURL", label: "URL Validation" },
+                                                { value: "isAlpha", label: "Alphabetical Validation" },
+                                                { value: "isNumeric", label: "Numeric Validation" },
+                                            ],
+                                            label: "Select to add validation on the field",
+                                            required: true,
+                                        },
+                                        {
+                                            type: "checkbox",
+                                            name: "fieldRequired",
+                                            label: "Is the field required?",
+                                        },
+                                        {
+                                            type: "checkbox",
+                                            name: "fieldDisabled",
+                                            label: "Is the field disabled?",
+                                        },
+                                    ]
+                                }
+                            },
+                            {
+                                title: "Field Configurations",
+                                parameters: {
+                                    fields: [
+                                        {
+                                            type: "checkbox",
+                                            name: "fileMultiple",
+                                            label: "Enable multiple File Upload?",
+                                            dependant: 'fieldType',
+                                            dependValue: 'file'
+                                        },
+                                        {
+                                            type: 'number',
+                                            name: 'textMin',
+                                            label: "Minimum Value",
+                                            dependant: 'fieldType',
+                                            dependValue: 'textField',
+                                        },
+                                        {
+                                            type: 'number',
+                                            name: 'textMax',
+                                            label: "Maximum Value",
+                                            dependant: 'fieldType',
+                                            dependValue: 'textField',
+                                        },
+                                        {
+                                            type: 'number',
+                                            name: 'numberMin',
+                                            label: "Minimum Value",
+                                            dependant: 'fieldType',
+                                            dependValue: 'number',
+                                        },
+                                        {
+                                            type: 'number',
+                                            name: 'numberMax',
+                                            label: "Maximum Value",
+                                            dependant: 'fieldType',
+                                            dependValue: 'number',
+                                        },
+                                        {
+                                            type: 'number',
+                                            name: 'textAreaMin',
+                                            label: "Minimum Words",
+                                            dependant: 'fieldType',
+                                            dependValue: 'textArea',
+                                        },
+                                        {
+                                            type: 'number',
+                                            name: 'textAreaMax',
+                                            label: "Maximum Words",
+                                            dependant: 'fieldType',
+                                            dependValue: 'textArea',
+                                        },
+                                        {
+                                            type: 'date',
+                                            name: 'dateMin',
+                                            label: "Minimum Date",
+                                            dependant: 'fieldType',
+                                            dependValue: 'date',
+                                        },
+                                        {
+                                            type: 'date',
+                                            name: 'dateMax',
+                                            label: "Maximum Date",
+                                            dependant: 'fieldType',
+                                            dependValue: 'date',
+                                        },
+                                        {
+                                            type: 'dateTime',
+                                            name: 'dateTimeMin',
+                                            label: "Minimum Date and Time",
+                                            dependant: 'fieldType',
+                                            dependValue: 'dateTime',
+                                        },
+                                        {
+                                            type: 'dateTime',
+                                            name: 'dateTimeMax',
+                                            label: "Maximum Date and Time",
+                                            dependant: 'fieldType',
+                                            dependValue: 'dateTime',
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                title: "Dependancy",
+                                parameters: {
+                                    fields: [
+                                        {
+                                            type: 'textField',
+                                            name: 'dependantField',
+                                            label: 'Dependant Field',
+                                        },
+                                        {
+                                            type: 'textField',
+                                            name: 'dependantValue',
+                                            label: 'Dependant Value',
+                                        },
+                                    ]
+                                }
+                            }
+                        ],
+                        buttons: [
+                            {
+                                type: "submit",
+                                label: "Submit",
+                            },
+                            {
+                                type: "close",
+                                label: "Close",
+                                onClick: () => { setNewFieldModalOpen(false) }
+                            }
+                        ],
+                        onAction: (formData, index) => {
+                            console.log("Form Data", formData);
+                            handleAddNewFieldInForm(formData);
+                        },
+                    }
+                ]
+            }
+        },
+        config: {
+            viewMode: {
+                presentation: 'modalView',
+                mode: "create"
+            },
+            features: { submission: true },
+        },
+        appearance: {
+            features: {
+                submission: {
+                    buttons: [
+                        {
+                            type: "close",
+                            backgroundColor: "red",
+                            color: '#fff',
+                        },
+                        {
+                            type: "submit",
+                            backgroundColor: "green",
+                            color: '#fff',
+                        },
+                    ],
+                },
+            },
+
+        },
+    }
+
+    const handleAddNewSectionInForm = (formData) => {
+        setGeneratedProps((prevState) => {
+            const updatedSubmission = [...prevState.data.features.submission];
+            const currentSections = updatedSubmission[currentStep]?.sections || [];
+
+            // Construct the new section object
+            const newSection = {
+                title: formData.sectionName || "",
+                parameters: {
+                    fields: [],
+                },
+            };
+
+            // Add the new section to the current sections array
+            const updatedSections = [...currentSections, newSection];
+            updatedSubmission[currentStep].sections = updatedSections;
+
+            console.log("New section added:", newSection);
+
+            return {
+                ...prevState,
+                data: {
+                    ...prevState.data,
+                    features: {
+                        ...prevState.data.features,
+                        submission: updatedSubmission,
+                    },
+                },
+            };
+        });
+    };
+
+    const newSectionProps = {
+        data: {
+            features: {
+                submission: [
+                    {
+                        title: "Add New Section",
+                        sections: [
+                            {
+                                title: "New Section",
+                                parameters: {
+                                    fields: [
+                                        {
+                                            type: "textField",
+                                            name: "sectionName",
+                                            label: "Enter the Title of the Section",
+                                            required: true,
+                                        },
+                                    ]
+                                }
+                            }
+                        ],
+                        buttons: [
+                            {
+                                type: "submit",
+                                label: "Submit",
+                            },
+                            {
+                                type: "close",
+                                label: "Close",
+                                onClick: () => { setNewSectionModalOpen(false) }
+                            }
+                        ],
+                        onAction: (formData) => {
+                            console.log("Hello", formData);
+                            handleAddNewSectionInForm(formData);
+                        },
+                    }
+                ]
+            },
+        },
+        config: {
+            viewMode: {
+                presentation: 'modalView',
+                mode: "create"
+            },
+            features: { submission: true },
+        },
+        appearance: {
+            features: {
+                submission: {
+                    buttons: [
+                        {
+                            type: "close",
+                            backgroundColor: "red",
+                            color: '#fff',
+                        },
+                        {
+                            type: "submit",
+                            backgroundColor: "green",
+                            color: '#fff',
+                        },
+                    ],
+                },
+            },
+        }
+    }
 
     const [generatedProps, setGeneratedProps] = useState({
         data: {
             features: {
                 submission: [
                     {
-                        title: title,
+                        title: '',
                         sections: [
                             {
                                 title: "",
@@ -323,15 +555,15 @@ function FormBuilder() {
 
                         ],
                         buttons: [],
-                        onAction: () => { }
+                        onAction: () => { console.log("Hello") }
                     }
                 ]
             }
         },
         config: {
             viewMode: {
-                presentation: [],
-                mode: []
+                presentation: '',
+                mode: ''
             },
             features: { submission: true },
         },
@@ -347,51 +579,56 @@ function FormBuilder() {
                 ...generatedProps.data.features,
                 submission: generatedProps.data.features.submission.map((step) => ({
                     ...step,
-                    buttons: [] 
+                    buttons: step.buttons.filter(button => button.type === 'close')
                 }))
             }
         }
     };
-    const handleAddField = (index) => {
-        setCurrentStep(index);
-     
-        setShowNewFieldModal(true);
-    }
-    const handleGenerateFormProps = (formData) => {
 
-        const presentationModes = formData.formView ? ['formView'] : formData.modalView ? ['modalView'] : [];
-        const viewModes = formData.create ? ['create'] : formData.edit ? ['edit'] : formData.view ? ['view'] : [];
+    const handleAddField = (stepIndex, sectionIndex) => {
+        setSectionIndex(sectionIndex)
+        setCurrentStep(stepIndex);
+        setNewFieldModalOpen(true);
+    }
+
+    const handleAddSection = (index) => {
+        setCurrentStep(index);
+        setNewSectionModalOpen(true);
+    }
+
+    const handleGenerateFormProps = (formData) => {
+        setIsSubmitted(true)
+
+        const presentationModes = formData.presentationModes;
+        const viewModes = formData.viewModes;
         const multiStep = formData.multiStep;
+
+        const firstTitle = formData.firstTitle;
+        const firstSection = formData.firstSectionTitle;
+        setIsMultiStep(multiStep)
         const updatedGeneratedProps = {
             data: {
                 features: {
                     submission: [
                         {
-                            title: title,
+                            title: firstTitle,
                             sections: [
                                 {
-                                    title: "",
+                                    title: firstSection,
                                     parameters: {
                                         fields: [
-                                           
+
                                         ]
                                     }
                                 },
                             ],
                             buttons: [
-                                {
-                                    type: "add",
-                                    label: "Add Field",
-                                    onClick: (index) => { handleAddField(index) },
-                                },
-                                multiStep ? {
-                                    type: "add",
-                                    label: "Add Step",
-                                    onClick: (index) => { handleAddStep(index) }, // You can also pass different handlers for different buttons
-                                } : null,
-                            ].filter(Boolean), 
 
-                            onAction: () => { }
+
+                            ].filter(Boolean),
+
+                            onAction: () => { console.log("Hello") },
+
                         }
                     ]
                 }
@@ -407,25 +644,26 @@ function FormBuilder() {
             }
         };
         setGeneratedProps(updatedGeneratedProps);
-
-
     }
 
-
-
-    const DemoView = ({generatedProps}) => {
+    const JsonView = ({ generatedProps }) => {
         return (
-          <Box sx={{ p: 3, border: '1px solid grey', mt: 3 }}>
-            <Typography variant="h6">Generated Props</Typography>
-            <JsonFormater
-              data={generatedProps.data}
-              config={generatedProps.config}
-              appearance={generatedProps.appearance}
-            />
-          </Box>
+            <Box
+                sx={{
+                    width: '100%', // Makes the component occupy full width
+                    padding: 3,
+                    marginTop: 3,
+                    overflowX: 'auto', // Allows horizontal scrolling if content overflows
+                }}
+            >
+                <JsonFormater
+                    data={generatedProps.data}
+                    config={generatedProps.config}
+                    appearance={generatedProps.appearance}
+                />
+            </Box>
         );
-      };
-    
+    };
 
 
     const [form, setForm] = useState({
@@ -440,24 +678,19 @@ function FormBuilder() {
                                 parameters: {
                                     fields: [
                                         {
-                                            name: "presentationModes",
-                                            type: 'singleSelectionCheckbox',
-                                            childFields: [
+                                            name: 'presentationModes',
+                                            type: 'radio',
+                                            options: [
                                                 {
-                                                    name: 'formView',
                                                     label: 'Form View',
-                                                    type: 'checkbox',
-                                                    required: false,
-                                                    validation: () => { },
+                                                    value: 'formView'
                                                 },
                                                 {
-                                                    name: 'modalView',
                                                     label: 'Modal View',
-                                                    type: 'checkbox',
-                                                    required: false,
-                                                    validation: () => { },
+                                                    value: 'modalView'
                                                 },
                                             ],
+                                            required: true
                                         },
                                     ],
                                 },
@@ -467,34 +700,39 @@ function FormBuilder() {
                                 parameters: {
                                     fields: [
                                         {
-                                            name: "viewModes",
-                                            type: "singleSelectionCheckbox",
-                                            childFields: [
+                                            name: 'viewModes',
+                                            type: 'radio',
+                                            options: [
                                                 {
-                                                    name: 'create',
+                                                    value: 'create',
                                                     label: 'Create',
-                                                    type: 'checkbox',
-                                                    required: false,
-                                                    validation: () => { },
                                                 },
                                                 {
-                                                    name: 'edit',
+                                                    value: 'edit',
                                                     label: 'Edit',
-                                                    type: 'checkbox',
-                                                    required: false,
-                                                    validation: () => { },
                                                 },
                                                 {
-                                                    name: 'view',
+                                                    value: 'view',
                                                     label: 'View',
-                                                    type: 'checkbox',
-                                                    required: false,
-                                                    validation: () => { },
                                                 },
                                             ],
+                                            required: true
                                         },
                                     ],
                                 },
+                            },
+                            {
+                                title: "Section Configuration",
+                                parameters: {
+                                    fields: [
+                                        {
+                                            name: "firstSectionTitle",
+                                            label: "Title of First Section",
+                                            type: "textField",
+                                            required: true,
+                                        }
+                                    ]
+                                }
                             },
                             {
                                 title: "Multi Step Configuration",
@@ -505,20 +743,12 @@ function FormBuilder() {
                                             label: "Do you want a multistep form?",
                                             type: "checkbox",
                                             required: false,
-                                            onAction: (formData) => {
-                                          
-                                                handleFirstStepTitle(formData);
-                                            },
-                                            validation: () => { }
                                         },
                                         {
-                                            name:"title",
-                                            label:"Enter the title of the form",
-                                            type:"text",
-                                            onAction: (formData) => {
-                                                setTitle(formData);
-                                            },
-                                            required:false,
+                                            name: "firstTitle",
+                                            label: "Title of First Step",
+                                            type: "textField",
+                                            required: false,
 
                                         }
                                     ]
@@ -531,17 +761,16 @@ function FormBuilder() {
                                 label: "Submit",
                             }
                         ],
-                        onAction: (formData) => {
-                          handleGenerateFormProps(formData);
-                        }
+                        onAction: handleGenerateFormProps,
+
                     },
                 ],
             },
         },
         config: {
             viewMode: {
-                presentation: ['formView',"demoView"],
-                mode: ["create"]
+                presentation: 'formView',
+                mode: 'create'
             },
             features: { submission: true },
         },
@@ -560,55 +789,515 @@ function FormBuilder() {
         },
     });
 
-    return (
-        <Grid container spacing={3} padding={2} sx={{ ml: 10 }}>
-            <Grid container spacing={2}>
-                <Grid item xs={8} md={14}>
-                    <ADDform
-                        data={form.data}
-                        config={form.config}
-                        appearance={form.appearance}
-                    />
+    const handleDeleteField = (stepIndex, sectionIndex, fieldIndex) => {
+        // Create a copy of the current form data to avoid direct state mutation
+        const updatedData = { ...generatedProps.data };
+
+        // Check if the specified step exists
+        if (updatedData?.features?.submission?.[stepIndex]?.sections?.[sectionIndex]) {
+            const sections = updatedData.features.submission[stepIndex].sections;
+
+            // Remove the specified field from the section
+            if (sections[sectionIndex].parameters.fields.length > fieldIndex) {
+                sections[sectionIndex].parameters.fields.splice(fieldIndex, 1);
+            }
+
+            // Update the state with the new data
+            setGeneratedProps(prevState => ({
+                ...prevState,
+                data: updatedData,
+            }));
+        }
+    };
+
+    const handleDeleteSection = (stepIndex, sectionIndex) => {
+        const updatedSteps = [...generatedProps.data.features.submission];
+        updatedSteps[stepIndex].sections.splice(sectionIndex, 1);
+        setGeneratedProps((prev) => ({
+            ...prev,
+            data: {
+                ...prev.data,
+                features: {
+                    ...prev.data.features,
+                    submission: updatedSteps,
+                },
+            },
+        }));
+    };
+    const handleDeleteStep = (stepIndex) => {
+        const updatedSteps = [...generatedProps.data.features.submission];
+        updatedSteps.splice(stepIndex, 1);
+        setGeneratedProps((prev) => ({
+            ...prev,
+            data: {
+                ...prev.data,
+                features: {
+                    ...prev.data.features,
+                    submission: updatedSteps,
+                },
+            },
+        }));
+    };
+
+    function config() {
+        return (
+            <>
+                <Grid
+                    container
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                        overflow: 'auto',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '2rem'
+                    }}
+                >
+                    <Grid item xs={12}>
+                        <Form
+                            data={form.data}
+                            config={form.config}
+                            appearance={form.appearance}
+                        />
+                    </Grid>
+
+                    {isSubmitted &&
+                        (
+                            <Grid item xs={12}>
+                                <Typography
+                                    sx={{
+                                        color: "#3f51b2",
+                                        fontWeight: "bold",
+                                        textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+                                        textAlign: 'center',
+                                        mt: 2,
+                                    }}
+                                    variant="h4"
+                                >
+                                    Generated Form
+                                </Typography>
+                                <>
+                                    {(isMultiStep && isSubmitted) && (
+                                        <Grid item xs={12} sx={{ textAlign: 'center', mt: 4 }}>
+                                            <Button
+                                                variant="contained"
+                                                sx={{
+                                                    backgroundColor: "#3f51b2",
+                                                    color: "#fff",
+                                                    fontWeight: "bold",
+                                                    "&:hover": {
+                                                        backgroundColor: "#303f9f",
+                                                    },
+                                                    borderRadius: 2,
+                                                    padding: "8px 24px",
+                                                }}
+                                                onClick={handleAddStep}
+                                            >
+                                                Add Step
+                                            </Button>
+                                        </Grid>
+                                    )}
+                                    {isSubmitted && generatedProps?.data?.features?.submission?.map((step, stepIndex) => (
+                                        <Grid key={stepIndex} item xs={12} sx={{ mt: 4, p: 3, boxShadow: "0px 3px 6px rgba(0,0,0,0.1)", borderRadius: 2, backgroundColor: "#f7f9fc" }}>
+                                            <Grid container alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+                                                <Typography
+                                                    variant="h5"
+                                                    sx={{ fontWeight: 'bold', textAlign: 'left', color: "#3f51b2" }}
+                                                >
+                                                    Step {stepIndex + 1}: {step.title}
+                                                </Typography>
+
+
+                                                {isMultiStep && (
+                                                    <Button
+                                                        variant="outlined"
+                                                        color="error"
+                                                        onClick={() => handleDeleteStep(stepIndex)}
+                                                        sx={{
+                                                            color: "#d32f2f",
+                                                            borderColor: "#d32f2f",
+                                                            "&:hover": {
+                                                                backgroundColor: "#ffebee",
+                                                                borderColor: "#c62828",
+                                                            },
+                                                            fontWeight: "bold",
+                                                            borderRadius: 2,
+                                                        }}
+                                                    >
+                                                        Delete Step
+                                                    </Button>)}
+                                            </Grid>
+                                            <Button
+                                                variant="outlined"
+                                                sx={{
+                                                    mb: 3,
+                                                    color: "#3f51b2",
+                                                    borderColor: "#3f51b2",
+                                                    fontWeight: "bold",
+                                                    "&:hover": {
+                                                        backgroundColor: "#e3f2fd",
+                                                        borderColor: "#3f51b2",
+                                                    },
+                                                    borderRadius: 2,
+                                                }}
+                                                onClick={() => handleAddSection(stepIndex)}
+                                            >
+                                                Add Section
+                                            </Button>
+                                            {step?.sections?.map((section, sectionIndex) => (
+                                                <Grid
+                                                    key={sectionIndex}
+                                                    item
+                                                    xs={12}
+                                                    sx={{
+                                                        ml: 4,
+                                                        mt: 3,
+                                                        backgroundColor: "#ffffff",
+                                                        p: 3,
+                                                        borderRadius: 2,
+                                                        boxShadow: "0px 2px 4px rgba(0,0,0,0.1)"
+                                                    }}
+                                                >
+                                                    <Grid container alignItems="center" justifyContent="space-between">
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={{
+                                                                fontWeight: 'bold',
+                                                                color: "#3f51b2",
+                                                                mb: 1
+                                                            }}
+                                                        >
+                                                            Section {sectionIndex + 1}: {section.title}
+                                                        </Typography>
+                                                        <Button
+                                                            variant="outlined"
+                                                            color="error"
+                                                            onClick={() => handleDeleteSection(stepIndex, sectionIndex)}
+                                                            sx={{
+                                                                mb: 2,
+                                                                color: "#d32f2f",
+                                                                borderColor: "#d32f2f",
+                                                                "&:hover": {
+                                                                    backgroundColor: "#ffebee",
+                                                                    borderColor: "#c62828",
+                                                                },
+                                                                fontWeight: "bold",
+                                                                borderRadius: 2,
+                                                            }}
+                                                        >
+                                                            Delete Section
+                                                        </Button>
+                                                    </Grid>
+                                                    <Button
+                                                        variant="outlined"
+                                                        sx={{
+                                                            mt: 2,
+                                                            color: "#3f51b2",
+                                                            borderColor: "#3f51b2",
+                                                            fontWeight: "bold",
+                                                            "&:hover": {
+                                                                backgroundColor: "#e3f2fd",
+                                                                borderColor: "#3f51b2",
+                                                            },
+                                                            borderRadius: 2,
+                                                        }}
+                                                        onClick={() => handleAddField(stepIndex, sectionIndex)}
+                                                    >
+                                                        Add Field
+                                                    </Button>
+                                                    {section.parameters.fields.map((field, fieldIndex) => (
+                                                        <Grid
+                                                            key={fieldIndex}
+                                                            container
+                                                            alignItems="center"
+                                                            sx={{
+                                                                mt: 2,
+                                                                padding: 1,
+                                                                borderRadius: 1,
+                                                                backgroundColor: "#f1f3f5",
+                                                                width: '100%',
+                                                            }}
+                                                        >
+                                                            <Grid item xs={4}>
+                                                                <Typography sx={{ fontWeight: "medium", color: "#333", fontSize: "0.9rem" }}>
+                                                                    {field.name}
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+                                                                <Typography sx={{ color: "#555", fontSize: "0.9rem" }}>
+                                                                    {field.label}
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+                                                                <Typography sx={{ color: "#777", fontSize: "0.9rem" }}>
+                                                                    {field.onValidation}
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item>
+                                                                <Button
+                                                                    variant="outlined"
+                                                                    color="error"
+                                                                    onClick={() => handleDeleteField(stepIndex, sectionIndex, fieldIndex)}
+                                                                    sx={{
+                                                                        ml: 0,
+                                                                        mt: 2,
+                                                                        color: "#d32f2f",
+                                                                        borderColor: "#d32f2f",
+                                                                        "&:hover": {
+                                                                            backgroundColor: "#ffebee",
+                                                                            borderColor: "#c62828",
+                                                                        },
+                                                                        fontSize: "0.8rem",
+                                                                    }}
+                                                                >
+                                                                    Delete Field
+                                                                </Button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    ))}
+
+                                                </Grid>
+                                            ))}
+                                        </Grid>
+                                    ))}
+                                </>
+                            </Grid>
+
+                        )
+                    }
+                    {isNewFieldModalOpen && (
+                        <Grid item xs={12}>
+                            <Form
+                                data={newFieldProps.data}
+                                config={newFieldProps.config}
+                                appearance={newFieldProps.appearance}
+                            />
+                        </Grid>
+                    )}
+
+                    {isNewStepModalOpen && (
+                        <Grid item xs={12}>
+                            <Form
+                                data={newStepProps.data}
+                                config={newStepProps.config}
+                                appearance={newStepProps.appearance}
+                            />
+                        </Grid>
+                    )}
+
+                    {isNewSectionModalOpen && (
+                        <Grid item xs={12}>
+                            <Form
+                                data={newSectionProps.data}
+                                config={newSectionProps.config}
+                                appearance={newSectionProps.appearance}
+                            />
+                        </Grid>
+                    )}
+
+
                 </Grid>
+            </>
+        );
+
+    }
+
+    function view() {
+        return (
+            <>
+                <Grid
+                    container
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                        overflow: 'auto',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '2rem'
+                    }}
+                >
+                    <Grid item xs={12}>
+                        <Form
+                            data={generatedProps.data}
+                            config={generatedProps.config}
+                            appearance={generatedProps.appearance}
+                        />
+                    </Grid>
+
+                </Grid>
+            </>
+        );
+    }
+    function json() {
+        return (<>
+            <Grid
+                container
+                sx={{
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'auto',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: '2rem'
+                }}
+            >
+                <JsonView generatedProps={generatedProps} />
+
             </Grid>
-            <Grid item xs={12} md={14}>
-                <Grid sx={{ ml: 50 }}> <Typography variant="h3">Generated Form</Typography></Grid>
-                <ADDform
-                    data={generatedProps.data}
-                    config={generatedProps.config}
-                    appearance={generatedProps.appearance}
+        </>)
+    }
+    function api() {
+        const apiFormProps = {
+            data: {
+                features: {
+                    submission: [
+                        {
+                            title: "",
+                            sections: [
+                                {
+                                    title: "",
+                                    parameters: {
+                                        fields: [
+                                            {
+                                                type: "textField",
+                                                name: "apiUrl",
+                                                label: "Enter the Url of the Api",
+                                                required: true,
+                                                childFields: [{}],
+                                                options: [{}],
+                                            },
+                                            {
+                                                type: "textField",
+                                                name: "reduxAction",
+                                                label: "Enter the Redux Action Type",
+                                                required: true,
+                                                childFields: [{}],
+                                                options: [{}],
+                                            },
+                                            {
+                                                type: "textField",
+                                                name: "apiAction",
+                                                label: "Enter Api Action type",
+                                                required: true,
+                                                childFields: [{}],
+                                                options: [{}],
+                                            },
+                                            {
+                                                type: "checkbox",
+                                                name: "accesToken",
+                                                label: "Will this api require Access token",
+                                                required: true,
+                                                childFields: [{}],
+                                                options: [{}],
+                                            },
+                                            
+                                            {
+
+                                                name: 'requestType',
+                                                label: "Choose the request type of this Api",
+                                                type: 'radio',
+                                                options: [
+                                                    {
+                                                        label: 'GET',
+                                                        value: 'GET'
+                                                    },
+                                                    {
+                                                        label: 'POST',
+                                                        value: 'POST'
+                                                    },
+                                                    {
+                                                        label: 'PUT',
+                                                        value: 'PUT'
+                                                    },
+                                                    {
+                                                        label: 'DELETE',
+                                                        value: 'DELETE'
+                                                    },
+                                                ],
+                                                required: true
+
+                                            }
+                                        ],
+                                    },
+                                },
+                            ],
+                            buttons: [
+                                {
+                                    type: "submit",
+                                    label: "Submit"
+                                }
+
+                            ],
+                            onAction: (formData) => {
+                                handleAddSagaCommunication(formData)
+                                console.log("FormData::::", formData)
+                            }
+                        },
+                    ],
+                },
+            },
+
+            config: {
+                viewMode: {
+                    presentation: "formView",
+                    mode: "create"
+                },
+                features: {
+                    submission: true
+                }
+
+            },
+            appearance: {
+
+            }
+        }
+        return (
+            <>
+                <Form
+                    data={apiFormProps.data}
+                    config={apiFormProps.config}
+                    appearance={apiFormProps.appearance}
                 />
+            </>
+        )
+    }
+    const tabsData = [
+        {
+            label: "configurations",
+            content: config
+        },
+        {
+            label: "View",
+            content: view
+        },
+        {
+            label: "JSON",
+            content: json
+        },
+        {
+            label: "Api",
+            content: api
+        },
+
+    ]
+
+
+
+    return (
+        <Container maxWidth="lg" sx={{ padding: '2rem' }}>
+            <Grid container spacing={2} direction="column">
+                <Grid item>
+                    <BasicTabs title="Form Builder" tabs={tabsData} />
+                </Grid>
+
+
             </Grid>
-            {
-                showNewFieldModal && (
-                    <Grid item xs={12} md={12}>
-                        <ADDform
-                            data={newFieldProps.data}
-                            config={newFieldProps.config}
-                            appearance={newFieldProps.appearance}
-                        />
-                    </Grid>
-                )
-            }
-            {
-                showNewStepModal && (
-                    <Grid item xs={12} md={12}>
-                        <ADDform
-                            data={newStepProps.data}
-                            config={newStepProps.config}
-                            appearance={newStepProps.appearance}
-                        />
-                    </Grid>
-                )
-            }
-            {
-                   <Grid item xs={12} md={10}>
-                <DemoView generatedProps={generatedPropsWithoutButtons} />
-            </Grid>
-            }
-                
-        </Grid>
+        </Container>
     );
+
 }
 
 export default FormBuilder;

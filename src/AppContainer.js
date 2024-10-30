@@ -11,7 +11,7 @@ import FrontEndDocumentation from './views/frontEndDocumentation';
 import BackendDocumentation from './views/Backend/backendDocumentation';
 import HomePage from './views/homePage';  // Import your HomePage component
 import GeneratedObjectPage from './views/Backend/generatedObject';
-import FormBuilder from './components/Form/FormBuilder';
+import FormDashboard from './components/Form/index';
 
 const AppContainer = () => {
   
@@ -25,7 +25,7 @@ const AppContainer = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/frontend" element={<FrontEndDocumentation />} />
             <Route path="/backend" element={<BackendDocumentation />} />
-            <Route path="/formGeneration" element={<FormBuilder />} />
+            <Route path="/formGeneration" element={<FormDashboard />} />
             <Route path="/generated-object" element={<GeneratedObjectPage />} />
         </Routes>
     </Grid>
